@@ -1,26 +1,52 @@
 import streamlit as st
-from openai import OpenAI  # New import style for >=1.0.0
+from openai import OpenAI
 
-st.set_page_config(page_title="Ask About Luis", layout="centered")
+st.set_page_config(page_title="Ask Diego's Assistant", layout="centered")
 
-st.title("🧠 Ask Me About Luis")
-st.write("This assistant can answer questions about Luis: his background, projects, skills, and more.")
+# Styling (dark floating bubble theme)
+st.markdown("""
+    <style>
+    .block-container {
+        padding-top: 2rem;
+        max-width: 600px;
+        margin: auto;
+        font-family: 'Segoe UI', sans-serif;
+    }
+    h1 {
+        text-align: center;
+        color: #000;
+    }
+    .stTextInput>div>div>input {
+        font-size: 16px;
+        padding: 12px;
+    }
+    .stButton button {
+        background-color: black;
+        color: white;
+        font-size: 16px;
+        padding: 8px 16px;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
-# Set up OpenAI client for OpenRouter
+st.markdown("### 👋 Ask Me About Diego")
+st.write("I'm a personal assistant trained on Diego's career, projects, and passions. Ask me anything!")
+
 client = OpenAI(
     api_key=st.secrets["OPENROUTER_API_KEY"],
     base_url="https://openrouter.ai/api/v1"
 )
 
-question = st.text_input("Ask a question:")
+question = st.text_input("Type your question here:")
 
 if question:
-    response = client.chat.completions.create(
-        model="mistralai/mistral-7b-instruct:free",  # Free OpenRouter-compatible model
-        messages=[
-            {"role": "system", "content": "You are an assistant that only answers questions about Luis. Luis is a bilingual full-stack developer and AI builder. He co-founded Verskod and COMS, won Meta's Llama Impact Grant with BluEye ($100K), and regularly attends hackathons and conferences like Talent Land. He trains MMA, builds AI tools, and wants to launch a startup."},
-            {"role": "user", "content": question}
-        ]
-    )
-
-    st.write("🤖", response.choices[0].message.content)
+    with st.spinner("Thinking..."):
+        response = client.chat.completions.create(
+            model="mistralai/mistral-7b-instruct:free",
+            messages=[
+                {"role": "system", "content": "You only answer about Diego. Diego is a bilingual full-stack developer, co-founder of Verskod and COMS, won Meta’s Llama Grant ($100K), builds AI tools, attends hackathons, and trains MMA."},
+                {"role": "user", "content": question}
+            ]
+        )
+        st.success("Here's what I found:")
+        st.markdown(f"**🤖 {response.choices[0].message.content}**")
