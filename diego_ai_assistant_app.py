@@ -6,7 +6,7 @@ st.set_page_config(page_title="Ask About Luis", layout="centered")
 st.title("🧠 Ask Me About Luis")
 st.write("This assistant can answer questions about Luis: his background, projects, skills, and more.")
 
-openai.api_key = st.secrets["OPENAI_API_KEY"]
+client = openai.OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 question = st.text_input("Ask a question:")
 
@@ -19,13 +19,12 @@ if question:
         "He trains MMA, builds AI tools, and wants to launch a startup."
     )
 
-    with st.spinner("Thinking..."):
-        response = openai.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": question}
-            ],
-        )
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": question}
+        ],
+    )
 
-    st.write("🤖", response.choices[0].message["content"])
+    st.write("🤖", response.choices[0].message.content)
