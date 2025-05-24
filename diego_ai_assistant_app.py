@@ -1,12 +1,12 @@
 import streamlit as st
-import openai
+from openai import OpenAI
 
 st.set_page_config(page_title="Ask About Luis", layout="centered")
 
 st.title("🧠 Ask Me About Luis")
 st.write("This assistant can answer questions about Luis: his background, projects, skills, and more.")
 
-client = openai.OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 question = st.text_input("Ask a question:")
 
