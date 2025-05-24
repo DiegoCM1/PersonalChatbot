@@ -1,16 +1,16 @@
 import streamlit as st
-from openai import OpenAI
+import openai
 
 st.set_page_config(page_title="Ask About Luis", layout="centered")
 st.title("🧠 Ask Me About Luis")
 st.write("This assistant can answer questions about Luis: his background, projects, skills, and more.")
 
-client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 question = st.text_input("Ask a question:")
 
 if question:
-    response = client.chat.completions.create(
+    response = openai.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
             {
